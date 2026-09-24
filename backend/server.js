@@ -8,7 +8,6 @@ const courseRoutes = require('./routes/courseRoutes');
 const assignmentRoutes = require('./routes/assignmentRoutes');
 const timetableRoutes = require('./routes/timetableRoutes');
 const noteRoutes = require('./routes/noteRoutes');
-const aiRoutes = require('./routes/aiRoutes');
 const wikiRoutes = require('./routes/wikiRoutes');
 
 const app = express();
@@ -23,7 +22,6 @@ app.use('/api/courses', courseRoutes);
 app.use('/api/assignments', assignmentRoutes);
 app.use('/api/timetable', timetableRoutes);
 app.use('/api/notes', noteRoutes);
-app.use('/api/ai', aiRoutes);
 app.use('/api/wiki', wikiRoutes);
 
 // Fallback error handler

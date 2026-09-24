@@ -1,33 +1,35 @@
+import axios from 'axios';
+
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 function getToken() {
   return localStorage.getItem('stm_token');
 }
 
-async function request(path, { method = 'GET', body, auth = true } = {}) {
-  const headers = { 'Content-Type': 'application/json' };
-  if (auth) {
-    const token = getToken();
-    if (token) headers.Authorization = `Bearer ${token}`;
-  }
+const http = axios.create({ baseURL: BASE_URL });
 
-  const res = await fetch(`${BASE_URL}${path}`, {
-    method,
-    headers,
-    body: body ? JSON.stringify(body) : undefined,
-  });
-
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    throw new Error(data.message || `Request failed (${res.status})`);
+http.interceptors.request.use((config) => {
+  const token = getToken();
+  if (token && config.auth !== false) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
-  return data;
+  return config;
+});
+
+async function request(method, path, { body, auth = true } = {}) {
+  try {
+    const res = await http.request({ method, url: path, data: body, auth });
+    return res.data;
+  } catch (err) {
+    const message = err.response?.data?.message || err.message || 'Request failed';
+    throw new Error(message);
+  }
 }
 
 export const api = {
-  get: (path) => request(path),
-  post: (path, body, opts) => request(path, { method: 'POST', body, ...opts }),
-  patch: (path, body) => request(path, { method: 'PATCH', body }),
-  del: (path) => request(path, { method: 'DELETE' }),
+  get: (path) => request('get', path),
+  post: (path, body, opts) => request('post', path, { body, ...opts }),
+  patch: (path, body) => request('patch', path, { body }),
+  del: (path) => request('delete', path),
   getToken,
 };

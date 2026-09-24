@@ -1,71 +1,40 @@
 import { useState } from 'react';
+import { Search, BookOpen, Globe, SpellCheck2 } from 'lucide-react';
 import { api } from '../api/client';
+import PageHead from '../components/PageHead';
 
 const MODES = [
-  { id: 'ai', label: 'Ask AI' },
-  { id: 'wiki', label: 'Wiki' },
-  { id: 'web', label: 'Web' },
-  { id: 'dict', label: 'Dictionary' },
+  { id: 'wiki', label: 'Wiki', icon: BookOpen },
+  { id: 'web', label: 'Web', icon: Globe },
+  { id: 'dict', label: 'Dictionary', icon: SpellCheck2 },
 ];
 
 export default function Research() {
-  const [mode, setMode] = useState('ai');
+  const [mode, setMode] = useState('wiki');
   return (
     <main className="content">
+      <PageHead icon={Search} title="Research" subtitle="Search Wikipedia, the web, or a dictionary" />
       <div className="card">
-        <div className="row">
-          {MODES.map((m) => (
-            <button
-              key={m.id}
-              className={mode === m.id ? 'btn' : 'btn ghost'}
-              onClick={() => setMode(m.id)}
-              type="button"
-            >
-              {m.label}
-            </button>
-          ))}
+        <div className="mode-tabs">
+          {MODES.map((m) => {
+            const Icon = m.icon;
+            return (
+              <button
+                key={m.id}
+                className={`btn ghost${mode === m.id ? ' active' : ''}`}
+                onClick={() => setMode(m.id)}
+                type="button"
+              >
+                <Icon size={15} /> {m.label}
+              </button>
+            );
+          })}
         </div>
       </div>
-      {mode === 'ai' && <AskAI />}
       {mode === 'wiki' && <WikiSearch />}
       {mode === 'web' && <WebSearch />}
       {mode === 'dict' && <Dictionary />}
     </main>
-  );
-}
-
-function AskAI() {
-  const [history, setHistory] = useState([]);
-  const [q, setQ] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  async function ask(e) {
-    e.preventDefault();
-    if (!q.trim()) return;
-    const question = q;
-    setHistory((h) => [...h, { role: 'user', text: question }]);
-    setQ('');
-    setLoading(true);
-    try {
-      const data = await api.post('/ai/explain', { question });
-      setHistory((h) => [...h, { role: 'ai', text: data.answer }]);
-    } catch (err) {
-      setHistory((h) => [...h, { role: 'ai', text: err.message }]);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  return (
-    <div className="card">
-      <h2>Ask AI to explain a topic</h2>
-      {history.map((m, i) => <div key={i} className={`chat-msg ${m.role}`}>{m.text}</div>)}
-      {loading && <p className="meta">Thinking…</p>}
-      <form className="row" onSubmit={ask} style={{ marginTop: 8 }}>
-        <input placeholder="e.g. Explain photosynthesis simply" value={q} onChange={(e) => setQ(e.target.value)} />
-        <button className="btn" type="submit">Ask</button>
-      </form>
-    </div>
   );
 }
 
@@ -92,10 +61,10 @@ function WikiSearch() {
 
   return (
     <div className="card">
-      <h2>Wikipedia search</h2>
+      <h2><BookOpen size={16} /> Wikipedia search</h2>
       <form className="row" onSubmit={search}>
         <input placeholder="Search a topic" value={q} onChange={(e) => setQ(e.target.value)} />
-        <button className="btn" type="submit">Search</button>
+        <button className="btn" type="submit"><Search size={15} /> Search</button>
       </form>
       {loading && <p className="meta">Searching…</p>}
       {error && <p className="error-text">{error}</p>}
@@ -148,10 +117,10 @@ function WebSearch() {
 
   return (
     <div className="card">
-      <h2>Quick web search</h2>
+      <h2><Globe size={16} /> Quick web search</h2>
       <form className="row" onSubmit={search}>
         <input placeholder="Search anything" value={q} onChange={(e) => setQ(e.target.value)} />
-        <button className="btn" type="submit">Search</button>
+        <button className="btn" type="submit"><Search size={15} /> Search</button>
       </form>
       {loading && <p className="meta">Searching…</p>}
       {error && <p className="error-text">{error}</p>}
@@ -205,10 +174,10 @@ function Dictionary() {
 
   return (
     <div className="card">
-      <h2>Dictionary</h2>
+      <h2><SpellCheck2 size={16} /> Dictionary</h2>
       <form className="row" onSubmit={lookup}>
         <input placeholder="Enter a word" value={word} onChange={(e) => setWord(e.target.value)} />
-        <button className="btn" type="submit">Define</button>
+        <button className="btn" type="submit"><Search size={15} /> Define</button>
       </form>
       {loading && <p className="meta">Looking up…</p>}
       {error && <p className="error-text">{error}</p>}

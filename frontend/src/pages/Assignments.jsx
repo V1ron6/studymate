@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
+import { ClipboardList, Plus } from 'lucide-react';
 import { api } from '../api/client';
 import AssignmentItem from '../components/AssignmentItem';
+import PageHead from '../components/PageHead';
 
 export default function Assignments() {
   const [assignments, setAssignments] = useState([]);
@@ -35,8 +37,9 @@ export default function Assignments() {
 
   return (
     <main className="content">
+      <PageHead icon={ClipboardList} title="Assignments" subtitle="Track what's due and when" />
       <form className="card" onSubmit={addAssignment}>
-        <h2>Add assignment</h2>
+        <h2><Plus size={16} /> Add assignment</h2>
         <div className="row">
           <input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
           <select value={course} onChange={(e) => setCourse(e.target.value)}>
@@ -46,14 +49,14 @@ export default function Assignments() {
         </div>
         <div className="row">
           <input type="date" value={due} onChange={(e) => setDue(e.target.value)} />
-          <button className="btn" type="submit">Add</button>
+          <button className="btn" type="submit"><Plus size={16} /> Add</button>
         </div>
       </form>
       <div className="card">
-        <h2>All assignments</h2>
+        <h2><ClipboardList size={16} /> All assignments</h2>
         {assignments.length
           ? assignments.map((a) => <AssignmentItem key={a._id} assignment={a} onToggle={toggle} onDelete={remove} />)
-          : <p className="empty">No assignments yet.</p>}
+          : <p className="empty">No assignments yet — add one above.</p>}
       </div>
     </main>
   );

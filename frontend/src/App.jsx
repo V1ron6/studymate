@@ -1,6 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
-import Header from './components/Header';
 import Nav from './components/Nav';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -13,14 +12,13 @@ import Research from './pages/Research';
 
 function PrivateLayout({ children }) {
   const { user, loading } = useAuth();
-  if (loading) return <p className="empty" style={{ padding: 40 }}>Loading…</p>;
+  if (loading) return <p className="empty" style={{ margin: 40 }}>Loading…</p>;
   if (!user) return <Navigate to="/login" replace />;
   return (
-    <>
-      <Header />
+    <div className="app-shell">
       <Nav />
       {children}
-    </>
+    </div>
   );
 }
 

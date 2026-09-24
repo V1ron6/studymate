@@ -1,10 +1,10 @@
 export const NAV_ITEMS = [
-  { path: '/', label: 'Dashboard' },
-  { path: '/courses', label: 'Courses' },
-  { path: '/assignments', label: 'Assignments' },
-  { path: '/timetable', label: 'Timetable' },
-  { path: '/progress', label: 'Progress' },
-  { path: '/research', label: 'Research' },
+  { path: '/', label: 'Dashboard', icon: 'LayoutDashboard' },
+  { path: '/courses', label: 'Courses', icon: 'BookOpen' },
+  { path: '/assignments', label: 'Assignments', icon: 'ClipboardList' },
+  { path: '/timetable', label: 'Timetable', icon: 'CalendarDays' },
+  { path: '/progress', label: 'Progress', icon: 'TrendingUp' },
+  { path: '/research', label: 'Research', icon: 'Search' },
 ];
 
 export const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
